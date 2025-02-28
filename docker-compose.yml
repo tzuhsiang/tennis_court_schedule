@@ -1,0 +1,10 @@
+
+services:
+  court-scraper:
+    build: .
+    container_name: tennis-court-scraper
+    volumes:
+      - ./data:/app
+    environment:
+      - TZ=Asia/Taipei
+    restart: "no"
