@@ -1,10 +1,29 @@
+version: '3'
 
 services:
+  chrome:
+    image: seleniarm/standalone-chromium:latest
+    container_name: selenium-chrome
+    shm_size: '2gb'
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    environment:
+      - TZ=Asia/Taipei
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   court-scraper:
     build: .
     container_name: tennis-court-scraper
     volumes:
-      - ./data:/app
+      - ./data:/app/data
     environment:
       - TZ=Asia/Taipei
-    restart: "no"
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      chrome:
+        condition: service_healthy

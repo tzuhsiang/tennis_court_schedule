@@ -1,30 +1,27 @@
-# 使用Python官方映像檔
-FROM python:3.11-slim
+FROM python:3.9-slim-buster
 
-# 安裝必要套件
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    unzip \
     chromium \
     chromium-driver \
-    && apt-get clean \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# 設定環境變數
-ENV PATH="/usr/local/bin:$PATH"
-ENV CHROME_BIN="/usr/bin/chromium"
-ENV CHROMEDRIVER_BIN="/usr/bin/chromedriver"
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV DISPLAY=:99
 
-# 工作目錄
 WORKDIR /app
 
-# 複製程式碼和需求檔
-COPY requirements.txt requirements.txt
-COPY scraper.py scraper.py
-
-# 安裝Python套件
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 設定容器預設執行程式
-CMD ["python", "scraper.py"]
+# Copy source code
+COPY . .
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Start Xvfb and run the scraper
+CMD Xvfb :99 -screen 0 1920x1080x16 & python scraper.py
