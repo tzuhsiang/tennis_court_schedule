@@ -1,4 +1,3 @@
-version: '3'
 
 services:
   chrome:
@@ -24,6 +23,7 @@ services:
     environment:
       - TZ=Asia/Taipei
       - PYTHONUNBUFFERED=1
+      - SELENIUM_REMOTE_URL=http://chrome:4444/wd/hub
     depends_on:
       chrome:
         condition: service_healthy

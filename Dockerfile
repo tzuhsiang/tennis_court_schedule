@@ -1,15 +1,8 @@
 FROM python:3.9-slim-buster
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    chromium \
-    chromium-driver \
-    xvfb \
-    && rm -rf /var/lib/apt/lists/*
-
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV DISPLAY=:99
+ENV SELENIUM_REMOTE_URL="http://chrome:4444"
 
 WORKDIR /app
 
@@ -23,5 +16,5 @@ COPY . .
 # Create data directory
 RUN mkdir -p /app/data
 
-# Start Xvfb and run the scraper
-CMD Xvfb :99 -screen 0 1920x1080x16 & python scraper.py
+# Run the scraper
+CMD ["python", "scraper.py"]
