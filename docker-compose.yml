@@ -20,6 +20,7 @@ services:
     container_name: tennis-court-scraper
     volumes:
       - ./data:/app/data
+      - ./scraper.py:/app/scraper.py
     environment:
       - TZ=Asia/Taipei
       - PYTHONUNBUFFERED=1
